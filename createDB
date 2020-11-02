@@ -1,0 +1,69 @@
+query = """
+    CREATE TABLE IF NOT EXISTS telecom_molchanov #creating database
+    (
+         ID INT PRIMARY KEY AUTO_INCREMENT,
+        `State` TEXT NOT NULL,
+        `Account length` INT NOT NULL,
+        `Area code` INT NOT NULL,
+        `International plan` TEXT  NOT NULL,
+        `Voice mail plan` TEXT NOT NULL,
+        `Number vmail messages` INT NOT NULL,
+        `Total day minutes` FLOAT NOT NULL,
+        `Total day calls` FLOAT NOT NULL,
+        `Total day charge` FLOAT NOT NULL,
+        `Total eve minutes` FLOAT NOT NULL,
+        `Total eve calls` FLOAT NOT NULL,
+        `Total eve charge` FLOAT NOT NULL,
+        `Total night minutes` FLOAT NOT NULL,
+        `Total night calls` FLOAT NOT NULL,
+        `Total night charge` FLOAT NOT NULL,
+        `Total intl minutes` FLOAT NOT NULL,
+        `Total intl calls` FLOAT NOT NULL,
+        `Total intl charge` FLOAT NOT NULL,
+        `Customer service calls` FLOAT NOT NULL,
+        `Churn` TEXT NOT NULL
+    )
+"""
+
+cursor.execute(query)
+db_conn.commit()
+
+
+query = """  # checking database
+    SELECT *
+    FROM telecom_molchanov
+"""
+cursor.execute(query)
+cursor.fetchall()
+
+
+query = """ # loading data from DF into database
+    INSERT INTO telecom_molchanov (
+        `State`,
+        `Account length`,
+        `Area code`,
+        `International plan`,
+        `Voice mail plan`,
+        `Number vmail messages`,
+        `Total day minutes`,
+        `Total day calls`,
+        `Total day charge`,
+        `Total eve minutes`,
+        `Total eve calls`,
+        `Total eve charge`,
+        `Total night minutes`,
+        `Total night calls`,
+        `Total night charge`,
+        `Total intl minutes`,
+        `Total intl calls`,
+        `Total intl charge`,
+        `Customer service calls`,
+        `Churn`
+    )
+    VALUES (%s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s,%s,%s,%s,%s)
+"""
+
+
+from tqdm.auto import tqdm # converting data into string
+for row in tqdm(df.values[:,:20][:]):
+    cursor.execute(query, row.tolist())
